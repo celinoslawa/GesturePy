@@ -5,13 +5,8 @@ import imProc
 import SVM
 import tkinter as tk
 from PIL import Image, ImageTk
-#import Image, ImageTk
 
-# 0 calibration 1 detectin
-appStatus = 0
-
-#################TRAINING
-
+##################TRAINING
 hog_descriptors = hog.getHOG()
 responses = hog.getResp()
 
@@ -28,6 +23,16 @@ window.config(background="#FFFFFF")
 #Graphics window
 imageFrame = tk.Frame(window, width=800, height=480)
 imageFrame.grid(row=0, column=0, padx=10, pady=2)
+
+#Button window
+buttonFrame = tk.Frame(window, width=600, height=100)
+buttonFrame.grid(row = 600, column=0, padx=10, pady=2)
+appStatus = tk.IntVar()
+C1 = tk.Checkbutton(buttonFrame, text = "Calibrated", variable = appStatus, \
+                 onvalue = 1, offvalue = 0, height=5, \
+                 width = 20)
+C1.place(x=10, y=10)
+
 
 ###################################### CAMERA CAPTURE
 #Capture video frames
@@ -49,21 +54,18 @@ def show_frame():
     mHSV = cv2.cvtColor(mask2, cv2.COLOR_BGR2HSV)
     mask3 = iP.backgroungRemove(mask2, appStatus)
     #mask4 = iP.backgroungRemove1(mask2, appStatus)
-    if appStatus == 0:
+    print("appStatus = ", appStatus.get())
+    if appStatus.get() == 0:
         mask2 = iP.drawCalibrationPoints(mask2)
     mask2 = iP.drawContours(mask2, mask3)
+    mask2 = cv2.cvtColor(mask2, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(mask2)
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
-    lmain.after(10, show_frame)
+    lmain.after(5, show_frame)
 
-#Slider window (slider controls stage position)
-sliderFrame = tk.Frame(window, width=600, height=100)
-sliderFrame.grid(row = 600, column=0, padx=10, pady=2)
-
-
-show_frame()  #Display 2
+show_frame()
 window.mainloop()  #Starts GUI
 
 
