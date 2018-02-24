@@ -52,7 +52,7 @@ def show_frame():
     mask2 = mask1[0:800, 0:480]
     mask2 = cv2.GaussianBlur(mask2, (5, 5), 0)
     mHSV = cv2.cvtColor(mask2, cv2.COLOR_BGR2HSV)
-    mask3 = iP.backgroungRemove(mask2, appStatus)
+    mask3 = iP.backgroungRemove(mask2, appStatus.get())
     #mask4 = iP.backgroungRemove1(mask2, appStatus)
     print("appStatus = ", appStatus.get())
     if appStatus.get() == 0:
