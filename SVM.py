@@ -9,9 +9,11 @@ class SVM:
         #self.model.setKernel(cv2.ml.SVM_LINEAR)
         self.model.setType(cv2.ml.SVM_C_SVC)
 
+
     def train(self, samples, responses):
         self.model.train(samples, cv2.ml.ROW_SAMPLE, responses)
 
     def predict(self, samples):
 
-        return self.model.predict(samples)[1].ravel()
+        return self.model.predict(samples) #[1].ravel()
+

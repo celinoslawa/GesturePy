@@ -1,14 +1,20 @@
 import cv2
+import numpy as np
 import hog
-import time
 import imProc
 import SVM
 import tkinter as tk
 from PIL import Image, ImageTk
+#np.set_printoptions(threshold=np.nan)
 
 ##################TRAINING
-hog_descriptors = hog.getHOG()
-responses = hog.getResp()
+#text_file = open("HOG1.txt", "w")
+hogD = hog.Hog()
+hog_descriptors = hogD.getHOG()
+
+#print("Descriptor: ", hog_descriptors)
+print("Descriptor length: ", hog_descriptors.shape)
+responses = hogD.getResp()
 
 print('Training SVM model ...')
 model = SVM.SVM()
@@ -36,9 +42,11 @@ C1.place(x=10, y=10)
 
 ###################################### CAMERA CAPTURE
 #Capture video frames
+
+
 lmain = tk.Label(imageFrame)
 lmain.grid(row=0, column=0)
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 if cap.isOpened() == False:
     print ("VideoCapture failed")
@@ -51,12 +59,29 @@ def show_frame():
     mask1 = cv2.resize(frame, (600, 800), interpolation=cv2.INTER_AREA)
     mask2 = mask1[0:800, 0:480]
     mask2 = cv2.GaussianBlur(mask2, (5, 5), 0)
-    mHSV = cv2.cvtColor(mask2, cv2.COLOR_BGR2HSV)
+    #mHSV = cv2.cvtColor(mask2, cv2.COLOR_BGR2HSV)
     mask3 = iP.backgroungRemove(mask2, appStatus.get())
     #mask4 = iP.backgroungRemove1(mask2, appStatus)
     print("appStatus = ", appStatus.get())
     if appStatus.get() == 0:
         mask2 = iP.drawCalibrationPoints(mask2)
+    else:
+        mask3 = cv2.resize(mask3, (60, 100), interpolation=cv2.INTER_AREA)
+        #mask3 = cv2.cvtColor(mask3, cv2.COLO)
+        #print(mask3.shape)
+        #print(mask3.size)
+        descriptors = hogD.compute(mask3)
+        descriptors = descriptors.T
+        #descriptors = np.float32(descriptors).reshape(-1,1)
+        #print('Write to file ...')
+        #text_file.write(str(hog_descriptors))
+        #text_file.write(str(hog_descriptors))
+        #text_file.close()
+        print("Descriptors Len: ", descriptors.shape)
+        #print("Descriptors : ", descriptors)
+        #print("Descriptors type : ", type(descriptors))
+        resp = model.predict(descriptors)
+        print("Predicted value :  ", resp)
     mask2 = iP.drawContours(mask2, mask3)
     mask2 = cv2.cvtColor(mask2, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(mask2)
