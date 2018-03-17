@@ -15,5 +15,5 @@ class SVM:
 
     def predict(self, samples):
 
-        return self.model.predict(samples) #[1].ravel()
+        return self.model.predict(samples)[1].ravel()
 
