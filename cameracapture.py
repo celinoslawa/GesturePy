@@ -50,7 +50,7 @@ T1 = tk.Text(buttonFrame, height=5, width = 30, bg = "#e5e5e5", font=("Helvetica
 
 lmain = tk.Label(imageFrame)
 lmain.grid(row=0, column=0)
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 if cap.isOpened() == False:
     print ("VideoCapture failed")

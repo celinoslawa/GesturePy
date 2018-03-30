@@ -44,12 +44,14 @@ class ImProc:
         self.avLowerTOP = np.array([0, 0, 0])
         self.kernel = np.ones((15, 15), np.uint8)
         self.pointColor = [255, 0, 0]
+        self.corr = 30
 
 
     def backgroungRemove(self, maskn, status):
         global a, b, c, d, f, g, e, m, n, o, p
         mHSV = cv2.cvtColor(maskn, cv2.COLOR_BGR2HSV)
         mHSV = cv2.medianBlur(mHSV, 5)
+        cv2.blur(mHSV, (5, 5))
         cv2.blur(mHSV, (5, 5))
         cv2.dilate(mHSV, self.kernel, 1)
         cv2.erode(mHSV, self.kernel, 3)
@@ -147,10 +149,10 @@ class ImProc:
             upper[i] = values[2] #6
             values.clear()
         self.avUpperT = np.asarray([upper[0] + 25, upper[1] + 25, 255])
-        lower[0] = lower[0] - 25
+        lower[0] = lower[0] - 30
         if (lower[0])<0:
             lower[0] = 0
-        self.avLowerT = np.asarray([lower[0], lower[1] - 10, 0])
+        self.avLowerT = np.asarray([lower[0], lower[1] - 20, 0])
 
     def calibrationOfTresholdEMN(self):
         valuesmn = []
@@ -164,12 +166,12 @@ class ImProc:
             lowermn[i] = valuesmn[0]
             uppermn[i] = valuesmn[2]
             valuesmn.clear()
-        self.avUpperTmn = np.asarray([uppermn[0] + 25, uppermn[1] + 25, 255])
+        self.avUpperTmn = np.asarray([uppermn[0] + self.corr, uppermn[1] + self.corr, 255])
 
-        lowermn[0] = lowermn[0] - 25
+        lowermn[0] = lowermn[0] - 30
         if (lowermn[0]) < 0:
             lowermn[0] = 0
-        self.avLowerTmn = np.asarray([lowermn[0], lowermn[1] - 10, 0])
+        self.avLowerTmn = np.asarray([lowermn[0], lowermn[1] - 20, 0])
 
     def calibrationOfTresholdAFG(self):
         valuesAFG = []
@@ -183,11 +185,11 @@ class ImProc:
             lowerAFG[i] = valuesAFG[0]
             upperAFG[i] = valuesAFG[2]
             valuesAFG.clear()
-        self.avUpperTAFG = np.asarray([upperAFG[0] + 25, upperAFG[1] + 25, 255])
-        lowerAFG[0] = lowerAFG[0] - 25
+        self.avUpperTAFG = np.asarray([upperAFG[0] + self.corr, upperAFG[1] + self.corr, 255])
+        lowerAFG[0] = lowerAFG[0] - 30
         if (lowerAFG[0]) < 0:
             lowerAFG[0] = 0
-        self.avLowerTAFG = np.asarray([lowerAFG[0], lowerAFG[1] - 10, 0])
+        self.avLowerTAFG = np.asarray([lowerAFG[0], lowerAFG[1] - 20, 0])
 
     def calibrationOfTresholdOP(self):
         valuesOP = []
@@ -200,8 +202,8 @@ class ImProc:
             lowerOP[i] = valuesOP[0]
             upperOP[i] = valuesOP[1]
             valuesOP.clear()
-        self.avUpperOP = np.asarray([upperOP[0] + 25, upperOP[1] + 25, 255])
-        lowerOP[0] = lowerOP[0] - 25
+        self.avUpperOP = np.asarray([upperOP[0] + self.corr, upperOP[1] + self.corr, 255])
+        lowerOP[0] = lowerOP[0] - 30
         if (lowerOP[0]) < 0:
             lowerOP[0] = 0
-        self.avLowerTOP = np.asarray([lowerOP[0], lowerOP[1] - 10, 0])
+        self.avLowerTOP = np.asarray([lowerOP[0], lowerOP[1] - 20, 0])
